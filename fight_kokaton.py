@@ -137,6 +137,24 @@ class Beam:
             screen.blit(self.img, self.rct)
         
  
+class Score:
+    def __init__(self, screen):
+        self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
+        self.count = 0
+        self.img = self.fonto.render("スコア：", True, (255, 0,0))
+        self.rct = self.img.get_rect()
+        screen.blit(self.img, [100, HEIGHT-50])
+        self.rct.center = 100, HEIGHT-20
+    
+    def update(self, screen: pg.Surface):
+        """
+        あとでかきます、、、
+        """
+        #self. += 1
+        screen.blit(self.img, self.rct)
+        
+        #pg.display.update()
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -144,6 +162,7 @@ def main():
     bird = Bird((900, 400))
     #bomb = Bomb((255, 0, 0), 10)
     bombs = [Bomb((255,0,0),10) for _ in range(NUM_OF_BOMBS)]
+    score = Score(screen)
     beam = None
     clock = pg.time.Clock()
     tmr = 0
@@ -155,20 +174,18 @@ def main():
                 beam = Beam(bird)
         screen.blit(bg_img, [0, 0])
 
-        
-        if bird.rct.colliderect(bomb.rct):
-            # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
-            fonto = pg.font.Font(None, 80)
-            txt = fonto.render("GameOver", True, (255, 0,0))
-            screen.blit(txt, [WIDTH/2-150, HEIGHT/2])
-            pg.display.update()
-            time.sleep(5)
-            bird.change_img(8, screen)
-            pg.display.update()
-            time.sleep(1)
-            return
-
-
+        for bomb in bombs:
+            if bird.rct.colliderect(bomb.rct):
+                # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
+                fonto = pg.font.Font(None, 80)
+                txt = fonto.render("GameOver", True, (255, 0,0))
+                screen.blit(txt, [WIDTH/2-150, HEIGHT/2])
+                pg.display.update()
+                time.sleep(5)
+                bird.change_img(8, screen)
+                pg.display.update()
+                time.sleep(1)
+                return
         #if not (beam is None or bomb is None):
         for i,bomb in enumerate(bombs):
             if beam is not None:
@@ -176,6 +193,7 @@ def main():
                   beam = None
                   bombs[i] = None
                   bird.change_img(6, screen)
+                  score.count += 1
                   pg.display.update()
         bombs = [bomb for bomb in bombs if bomb is not None]
 
@@ -187,6 +205,8 @@ def main():
         
         if beam is not None:
             beam.update(screen)
+
+        score.update(screen)
         pg.display.update()
         tmr += 1
         clock.tick(50)
