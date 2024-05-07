@@ -150,7 +150,7 @@ class Score:
         """
         あとでかきます、、、
         """
-        #self. += 1
+        self.img = self.fonto.render("スコア：" + str(self.count), 0 , (255, 0,0))
         screen.blit(self.img, self.rct)
         
         #pg.display.update()
