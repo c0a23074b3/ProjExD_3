@@ -134,7 +134,7 @@ class Beam:
         if check_bound(self.rct) == (True, True):
             self.rct.move_ip(self.vx, self.vy)
             screen.blit(self.img, self.rct)
-
+            
 
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
@@ -161,10 +161,12 @@ def main():
             time.sleep(1)
             return
 
-        if not ( beam is None or bomb is None):
+        if not (beam is None or bomb is None):
             if beam.rct.colliderect(bomb.rct):  # ビームと爆弾が衝突したら
                   beam = None
                   bomb = None
+                  bird.change_img(6, screen)
+                  pg.display.update()
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
